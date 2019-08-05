@@ -23,20 +23,23 @@ type Response struct {
 }
 
 func Test_Init(t *testing.T) {
-	// logfile, err := os.OpenFile("C:/Temp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
-	logfile, err := os.OpenFile("/tmp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	logfile, err := os.OpenFile("C:/Temp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	// logfile, err := os.OpenFile("/tmp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 	assert.Nil(t, err, "")
 	h := Handler{}
 	h.Init()
+
+	// 웹 서버 실행
 	server = httptest.NewServer(handlers.CombinedLoggingHandler(logfile, http.DefaultServeMux))
-	testURL = server.URL
+	testURL = server.URL // 웹 서버 접근 URL
 }
 
+// Ping API 테스트.
 func Test_Ping(t *testing.T) {
 	res, err := DoGet(testURL + "/ping")
 	assert.Nil(t, err, "")
-	assert.Equal(t, 200, res.Code, "PING API")
-	assert.Equal(t, "pong", res.Content, "PONG Message")
+	assert.Equal(t, 200, res.Code, "PING API")           // 200 OK
+	assert.Equal(t, "pong", res.Content, "PONG Message") // "pong"
 }
 
 func DoGet(url string) (*Response, error) {
@@ -57,4 +60,27 @@ func Test_APINotFound(t *testing.T) {
 	res, err := DoGet(testURL + "/myfunc")
 	assert.Nil(t, err, "")
 	assert.Equal(t, 404, res.Code, "Unknown API")
+}
+
+func Test_Div(t *testing.T) {
+	res, err := DoGet(testURL + "/div/4/2")
+	assert.Nil(t, err, "")
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, "2", res.Content)
+
+	// res, err = DoGet(testURL + "/div/a/4")
+	// assert.Nil(t, err, "")
+	// assert.Equal(t, http.StatusInternalServerError, res.Code, "Invalide argument")
+
+	res, err = DoGet(testURL + "/div/4/a")
+	assert.Nil(t, err, "")
+	assert.Equal(t, http.StatusInternalServerError, res.Code, "Invalide argument")
+
+	res, err = DoGet(testURL + "/div/0/4")
+	assert.Nil(t, err, "")
+	assert.Equal(t, http.StatusNotAcceptable, res.Code, "Invalide argument")
+
+	res, err = DoGet(testURL + "/div/4/0")
+	assert.Nil(t, err, "")
+	assert.Equal(t, http.StatusNotAcceptable, res.Code, "Invalide argument")
 }
