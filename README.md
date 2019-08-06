@@ -49,7 +49,7 @@
 - 테스트 커버리지 확인
   - go test 명령에 옵션을 추가하여 커버리지를 확인할 수 있다.
 
-> go test -cover
+> go test -cover  
 > go test -coverprofile=coverage.out
 
 ![2](/img/gotest2.png)
