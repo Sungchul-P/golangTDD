@@ -23,8 +23,8 @@ type Response struct {
 }
 
 func Test_Init(t *testing.T) {
-	logfile, err := os.OpenFile("C:/Temp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
-	// logfile, err := os.OpenFile("/tmp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	// logfile, err := os.OpenFile("C:/Temp/test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	logfile, err := os.OpenFile("test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 	assert.Nil(t, err, "")
 	h := Handler{}
 	h.Init()

@@ -30,4 +30,6 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
+.envrc
+
 # End of https://www.gitignore.io/api/go
